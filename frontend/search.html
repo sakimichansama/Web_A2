@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>搜索活动 - 慈善活动管理平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1E88E5',
+                        secondary: '#43A047',
+                        accent: '#FB8C00',
+                        dark: '#263238',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .card-hover {
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- 导航栏 -->
+    <nav id="navbar" class="bg-white shadow-md fixed w-full z-10 top-0"></nav>
+
+    <!-- 搜索区域 -->
+    <section class="pt-24 pb-12">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="max-w-3xl mx-auto text-center mb-12">
+                <h1 class="text-3xl font-bold mb-4 text-dark">搜索慈善活动</h1>
+                <p class="text-lg text-gray-600">找到您感兴趣的慈善活动，为公益事业贡献力量</p>
+            </div>
+
+            <div class="max-w-3xl mx-auto bg-white rounded-lg shadow p-6 md:p-8 mb-12">
+                <form id="search-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label for="date" class="block text-sm font-medium text-gray-700 mb-1">活动日期</label>
+                            <input type="date" id="date" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition">
+                        </div>
+                        <div>
+                            <label for="location" class="block text-sm font-medium text-gray-700 mb-1">活动地点</label>
+                            <input type="text" id="location" placeholder="输入城市或地区" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition">
+                        </div>
+                        <div>
+                            <label for="category" class="block text-sm font-medium text-gray-700 mb-1">活动类别</label>
+                            <select id="category" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary transition">
+                                <option value="">所有类别</option>
+                                <!-- 类别将通过JavaScript动态加载 -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex justify-center space-x-4">
+                        <button type="submit" class="bg-primary text-white font-semibold px-6 py-2 rounded hover:bg-primary/90 transition flex items-center">
+                            <i class="fa fa-search mr-2"></i> 搜索活动
+                        </button>
+                        <button type="button" id="clear-filters" class="bg-gray-200 text-gray-700 font-semibold px-6 py-2 rounded hover:bg-gray-300 transition flex items-center">
+                            <i class="fa fa-refresh mr-2"></i> 清除筛选条件
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 搜索结果 -->
+            <div class="max-w-6xl mx-auto">
+                <div class="mb-6 text-center">
+                    <h2 id="results-count" class="text-xl font-semibold text-dark">请输入搜索条件并点击搜索</h2>
+                </div>
+                <div id="search-results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="col-span-full text-center py-24">
+                        <i class="fa fa-search text-5xl text-gray-300 mb-4"></i>
+                        <p class="text-lg text-gray-500">使用上方的搜索表单查找活动</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-12">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">慈善活动管理平台</h3>
+                    <p class="text-gray-400">连接爱心，传递温暖，共创美好未来</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">快速链接</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="index.html" class="hover:text-white transition">首页</a></li>
+                        <li><a href="search.html" class="hover:text-white transition">搜索活动</a></li>
+                        <li><a href="#" class="hover:text-white transition">关于我们</a></li>
+                        <li><a href="#" class="hover:text-white transition">常见问题</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">关注我们</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="bg-gray-700 hover:bg-primary w-10 h-10 rounded-full flex items-center justify-center transition">
+                            <i class="fa fa-weixin"></i>
+                        </a>
+                        <a href="#" class="bg-gray-700 hover:bg-primary w-10 h-10 rounded-full flex items-center justify-center transition">
+                            <i class="fa fa-weibo"></i>
+                        </a>
+                        <a href="#" class="bg-gray-700 hover:bg-primary w-10 h-10 rounded-full flex items-center justify-center transition">
+                            <i class="fa fa-qq"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-500">
+                <p>&copy; 2025 慈善活动管理平台 版权所有</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // API基础URL
+        const API_BASE_URL = 'http://localhost:3000/api';
+
+        // 加载导航栏
+        function loadNavbar() {
+            const navbar = document.getElementById('navbar');
+            navbar.innerHTML = `
+                <div class="container mx-auto px-4 md:px-6">
+                    <div class="flex justify-between items-center h-16">
+                        <div class="flex items-center">
+                            <a href="index.html" class="flex items-center">
+                                <i class="fa fa-heart text-primary text-2xl mr-2"></i>
+                                <span class="font-bold text-xl text-dark">慈善活动平台</span>
+                            </a>
+                        </div>
+                        <div class="hidden md:block">
+                            <div class="flex items-center space-x-8">
+                                <a href="index.html" class="text-dark hover:text-primary font-medium transition">首页</a>
+                                <a href="search.html" class="text-dark hover:text-primary font-medium transition">搜索活动</a>
+                                <a href="#" class="text-dark hover:text-primary font-medium transition">关于我们</a>
+                            </div>
+                        </div>
+                        <div class="md:hidden">
+                            <button id="mobile-menu-button" class="text-gray-600 hover:text-primary">
+                                <i class="fa fa-bars text-xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 移动端菜单 -->
+                <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg">
+                    <div class="px-2 pt-2 pb-3 space-y-1">
+                        <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-dark hover:bg-primary hover:text-white">首页</a>
+                        <a href="search.html" class="block px-3 py-2 rounded-md text-base font-medium text-dark hover:bg-primary hover:text-white">搜索活动</a>
+                        <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-dark hover:bg-primary hover:text-white">关于我们</a>
+                    </div>
+                </div>
+            `;
+
+            // 移动端菜单切换
+            document.getElementById('mobile-menu-button').addEventListener('click', () => {
+                const mobileMenu = document.getElementById('mobile-menu');
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        // 加载活动类别
+        async function loadCategories() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/categories`);
+                if (!response.ok) {
+                    throw new Error(`获取分类失败: ${response.status}`);
+                }
+                
+                const categories = await response.json();
+                if (!Array.isArray(categories)) {
+                    throw new Error('分类数据格式不正确');
+                }
+                
+                const categorySelect = document.getElementById('category');
+                
+                categories.forEach(category => {
+                    if (category.id && category.name) {
+                        const option = document.createElement('option');
+                        option.value = category.id;
+                        option.textContent = category.name;
+                        categorySelect.appendChild(option);
+                    }
+                });
+                
+            } catch (error) {
+                console.error('加载分类失败:', error);
+                // 显示错误信息但不影响整体功能
+                const errorOption = document.createElement('option');
+                errorOption.value = "";
+                errorOption.textContent = "加载分类失败";
+                errorOption.disabled = true;
+                document.getElementById('category').appendChild(errorOption);
+            }
+        }
+
+        // 格式化日期
+        function formatDate(dateString) {
+            if (!dateString) return '日期未设置';
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return '无效日期';
+            
+            return date.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // 计算进度百分比
+        function calculateProgress(current, target) {
+            const currentNum = Number(current) || 0;
+            const targetNum = Number(target) || 0;
+            if (targetNum <= 0) return 0;
+            return Math.min(Math.round((currentNum / targetNum) * 100), 100);
+        }
+
+        // 创建活动卡片
+        function createEventCard(event) {
+            if (!event) return '';
+            
+            const isPast = new Date(event.date) < new Date();
+            const progress = calculateProgress(event.current_amount, event.target_amount);
+            
+            return `
+                <div class="bg-white rounded-lg shadow overflow-hidden card-hover">
+                    ${isPast ? '<div class="bg-gray-500 text-white text-center py-1 text-sm font-medium">已结束</div>' : ''}
+                    <div class="relative h-48">
+                        <img src="${event.image_url || 'https://picsum.photos/id/1060/800/400'}" alt="${event.name || '活动图片'}" class="w-full h-full object-cover">
+                        <div class="absolute top-2 right-2 bg-primary text-white text-xs font-bold px-2 py-1 rounded">
+                            ${event.category_name || '未分类'}
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-dark">${event.name || '活动名称'}</h3>
+                        <p class="text-gray-600 mb-4 line-clamp-2">${event.purpose || '活动目的'}</p>
+                        
+                        <div class="space-y-3 mb-4">
+                            <div class="flex items-start">
+                                <i class="fa fa-calendar text-primary mt-1 mr-3"></i>
+                                <span class="text-gray-700">${formatDate(event.date)}</span>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fa fa-map-marker text-primary mt-1 mr-3"></i>
+                                <span class="text-gray-700">${event.location || '未指定地点'}</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 筹款进度 -->
+                        <div class="mb-4">
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="font-medium">筹款进度</span>
+                                <span class="text-gray-600">¥${(Number(event.current_amount) || 0).toFixed(2)} / ¥${(Number(event.target_amount) || 0).toFixed(2)}</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-secondary h-2 rounded-full" style="width: ${progress}%"></div>
+                            </div>
+                        </div>
+                        
+                        <a href="event-details.html?id=${event.id}" class="block w-full text-center bg-primary text-white font-semibold py-2 rounded hover:bg-primary/90 transition">
+                            查看详情
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 执行搜索
+        async function performSearch(event) {
+            event.preventDefault();
+            
+            // 获取表单数据
+            const date = document.getElementById('date').value;
+            const location = document.getElementById('location').value;
+            const categoryId = document.getElementById('category').value;
+            
+            // 构建查询参数
+            const params = new URLSearchParams();
+            if (date) params.append('date', date);
+            if (location) params.append('location', location);
+            if (categoryId) params.append('category_id', categoryId);
+            
+            // 显示加载状态
+            const resultsContainer = document.getElementById('search-results');
+            resultsContainer.innerHTML = `
+                <div class="col-span-full text-center py-24">
+                    <i class="fa fa-circle-o-notch fa-spin text-4xl text-primary mb-4"></i>
+                    <p class="text-lg text-gray-600">搜索中...</p>
+                </div>
+            `;
+            
+            try {
+                // 发送搜索请求
+                const response = await fetch(`${API_BASE_URL}/events/search?${params.toString()}`);
+                if (!response.ok) {
+                    throw new Error(`搜索失败: ${response.status}`);
+                }
+                
+                const events = await response.json();
+                if (!Array.isArray(events)) {
+                    throw new Error('搜索结果格式不正确');
+                }
+                
+                const resultsCount = document.getElementById('results-count');
+                
+                // 更新结果计数
+                resultsCount.textContent = `找到 ${events.length} 个活动`;
+                
+                // 显示搜索结果
+                if (events.length === 0) {
+                    resultsContainer.innerHTML = `
+                        <div class="col-span-full text-center py-24">
+                            <i class="fa fa-frown-o text-4xl text-gray-300 mb-4"></i>
+                            <p class="text-lg text-gray-500">没有找到符合条件的活动</p>
+                            <p class="text-gray-500 mt-2">请尝试调整搜索条件</p>
+                        </div>
+                    `;
+                } else {
+                    resultsContainer.innerHTML = '';
+                    events.forEach(event => {
+                        resultsContainer.innerHTML += createEventCard(event);
+                    });
+                }
+                
+            } catch (error) {
+                console.error('搜索出错:', error);
+                resultsContainer.innerHTML = `
+                    <div class="col-span-full text-center py-24">
+                        <i class="fa fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
+                        <p class="text-lg text-gray-600">搜索失败，请稍后重试</p>
+                        <p class="text-sm text-gray-500 mt-2">错误信息: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // 清除筛选条件
+        function clearFilters() {
+            document.getElementById('search-form').reset();
+            document.getElementById('search-results').innerHTML = `
+                <div class="col-span-full text-center py-24">
+                    <i class="fa fa-search text-5xl text-gray-300 mb-4"></i>
+                    <p class="text-lg text-gray-500">使用上方的搜索表单查找活动</p>
+                </div>
+            `;
+            document.getElementById('results-count').textContent = '请输入搜索条件并点击搜索';
+        }
+
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', () => {
+            loadNavbar();
+            loadCategories();
+            
+            // 绑定表单提交事件
+            document.getElementById('search-form').addEventListener('submit', performSearch);
+            
+            // 绑定清除筛选按钮事件
+            document.getElementById('clear-filters').addEventListener('click', clearFilters);
+        });
+    </script>
+</body>
+</html>
